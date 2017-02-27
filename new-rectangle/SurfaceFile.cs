@@ -26,6 +26,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(_filename, false))
             {
                 file.WriteLine("% " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+                file.WriteLine("surface.name=" + "Unknown Surface");
+                file.WriteLine("surface.kinect=" + Environment.MachineName);
                 file.WriteLine("surface.bottom.left=" + _pointToString(SurfaceBottomLeft));
                 file.WriteLine("surface.bottom.right=" + _pointToString(SurfaceBottomRight));
                 file.WriteLine("surface.top.left=" + _pointToString(SurfaceTopLeft));
