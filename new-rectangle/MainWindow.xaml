@@ -42,12 +42,10 @@
         <ContextMenu>
             <MenuItem Header="Add New Surface" Click="AddNewSurface_MenuItem_Click">
             </MenuItem>
-            <MenuItem Name="OnlyPlayersMenuItem" Header="Only Players" IsCheckable="True" IsChecked="True">
+            <MenuItem Name="OnlyPlayersMenuItem" Header="Only Players" IsCheckable="True" IsChecked="False">
             </MenuItem>
             <Separator/>
-            <MenuItem Header="Reload Config File" Click="ReloadConfigFile_MenuItem_Click">
-            </MenuItem>
-            <MenuItem Header="Save Config File" Click="SaveConfigFile">
+            <MenuItem Name="SaveSurfaceMenuItem" Header="Save Surface" Click="SaveSurfaceToFile">
             </MenuItem>
         </ContextMenu>
     </Window.ContextMenu>
@@ -62,7 +60,8 @@
         <Viewbox Grid.Row="1" HorizontalAlignment="Center">
             <Grid>
                 <Image Name="ImageGui" Source="{Binding ImageSource}" Stretch="UniformToFill" MouseLeftButtonUp="Image_MouseLeftButtonUp" />
-                <Canvas Name="canvas"/>
+                <Canvas Name="canvas">
+                </Canvas>
             </Grid>
         </Viewbox>
 

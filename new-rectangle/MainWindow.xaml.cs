@@ -43,7 +43,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         private string statusText = null;
 
-        private ConfigFile _configFile;
+        private SurfaceFile surfaceFile;
 
         private bool calibratingSurface = false;
         private List<Vector3> pointsToDepth;
@@ -51,9 +51,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         private FrameCounter _frameCounter;
 
-        private string configFilename = "../../../config.txt";
-
         private string MachineName;
+
+        private string _notificationText = "";
 
         public MainWindow()
         {
@@ -92,16 +92,19 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             pointsToDepth = new List<Vector3>();
             surfacePoints = new List<CameraSpacePoint>();
 
-            _configFile = new ConfigFile();
-            _loadConfig(_configFile);
+            surfaceFile = new SurfaceFile("rectangle.txt");
 
             _frameCounter = new FrameCounter();
-            _frameCounter.PropertyChanged += (o, e) => this.StatusText = String.Format("FPS = {0:N1} / CPU = {1:N6}", _frameCounter.FramesPerSecond, _frameCounter.CpuTimePerFrame);
+            _frameCounter.PropertyChanged += (o, e) => this.StatusText = String.Format("FPS = {0:N1} / CPU = {1:N6} / " + _notificationText, _frameCounter.FramesPerSecond, _frameCounter.CpuTimePerFrame);
+
 
 
             this.kinectSensor.Open();
             this.DataContext = this;
             this.InitializeComponent();
+
+            SaveSurfaceMenuItem.IsEnabled = false;
+
         }
 
         private void MultiFrameSourceReader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
@@ -307,12 +310,16 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             DepthSpacePoint pTR = coordinateMapper.MapCameraPointToDepthSpace(TR);
                             DepthSpacePoint pTL = coordinateMapper.MapCameraPointToDepthSpace(TL);
 
-                            _configFile.SurfaceBottomLeft = BL;
-                            _configFile.SurfaceBottomRight = BL;
-                            _configFile.SurfaceTopLeft = TL;
-                            _configFile.SurfaceTopRight = TR;
+                            surfaceFile.SurfaceBottomLeft = BL;
+                            surfaceFile.SurfaceBottomRight = BR;
+                            surfaceFile.SurfaceTopLeft = TL;
+                            surfaceFile.SurfaceTopRight = TR;
 
                             _drawSurface(pBL, pBR, pTR, pTL);
+
+                            _notificationText = "Surface Calibrated";
+                            SaveSurfaceMenuItem.IsEnabled = true;
+
 
                             surfacePoints.Clear();
                             calibratingSurface = false;
@@ -375,14 +382,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         private void AddNewSurface_MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            SaveSurfaceMenuItem.IsEnabled = false;
             OnlyPlayersMenuItem.IsChecked = false;
             calibratingSurface = true;
             surfacePoints.Clear();
             canvas.Children.Clear();
-            //_drawLine(0, 0, 0, (int)canvas.ActualHeight);
-            //_drawLine(0, 0, (int)canvas.ActualWidth, 0);
-            //_drawLine(0, (int)canvas.ActualHeight, (int)canvas.ActualWidth, (int)canvas.ActualHeight);
-            //_drawLine((int)canvas.ActualWidth, 0, (int)canvas.ActualWidth, (int)canvas.ActualHeight);
         }
 
         private void _drawLine(int X1, int Y1, int X2, int Y2)
@@ -419,26 +423,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             canvas.Children.Add(ellipse);
         }
 
-        private void _loadConfig(ConfigFile _configFile)
-        {
-            if (!_configFile.Load(configFilename))
-            {
-                Console.WriteLine("no such config file");
-            }
-            else
-            {
-                Console.WriteLine("Config File:");
-                Console.WriteLine("udp.unicast.port: " + _configFile.UdpUnicastPort);
-                Console.WriteLine("udp.broadcast.port: " + _configFile.UdpBroadcastPort);
-
-            }
-        }
-
-        private void ReloadConfigFile_MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            _loadConfig(_configFile);
-        }
-
         private void Image_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (calibratingSurface)
@@ -455,9 +439,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             _drawLine(d, a);
         }
 
-        private void SaveConfigFile(object sender, RoutedEventArgs e)
+        private void SaveSurfaceToFile(object sender, RoutedEventArgs e)
         {
-            _configFile.Save(configFilename);
+            if (SaveSurfaceMenuItem.IsEnabled)
+            {
+                surfaceFile.saveFile();
+                SaveSurfaceMenuItem.IsEnabled = false;
+                _notificationText = "File rectangle.txt Saved";
+            }
         }
     }
 }

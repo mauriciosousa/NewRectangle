@@ -1,8 +1,0 @@
-% 19/12/2016
-udp.broadcast.port=57743
-udp.unicast.port=577444
-%
-surface.bottom.left=0,6365487:0,02136296:1,406
-surface.bottom.right=0,6365487:0,02136296:1,406
-surface.top.left=0,6446326:0,1510543:1,389495
-surface.top.right=0,6406595:0,1219048:1,158496
