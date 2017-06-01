@@ -40,7 +40,9 @@
     </Window.Resources>
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="Add New Surface" Click="AddNewSurface_MenuItem_Click">
+            <MenuItem Header="Add New Surface 16:9" Click="AddNewSurface_169_MenuItem_Click">
+            </MenuItem>
+            <MenuItem Header="Add New Surface 4:3" Click="AddNewSurface_43_MenuItem_Click">
             </MenuItem>
             <MenuItem Name="OnlyPlayersMenuItem" Header="Only Players" IsCheckable="True" IsChecked="False">
             </MenuItem>

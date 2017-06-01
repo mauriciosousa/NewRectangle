@@ -55,6 +55,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         private string _notificationText = "";
 
+        private bool screen169 = false;
+
         public MainWindow()
         {
             MachineName = Environment.MachineName;
@@ -295,9 +297,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             CameraSpacePoint c;
 
                             if (Vector3.distance(surfacePoints[2], Vector3.addPoint(surfacePoints[1], c1)) < Vector3.distance(surfacePoints[2], Vector3.addPoint(surfacePoints[1], c2)))
-                                c = Vector3.mult(Vector3.normalize(c1), 9.0f / 16.0f * Vector3.norm(a)/*norm(b)*/);
+                                c = Vector3.mult(Vector3.normalize(c1), (screen169? 9.0f / 16.0f : 3.0f / 4.0f) * Vector3.norm(a)/*norm(b)*/);
                             else
-                                c = Vector3.mult(Vector3.normalize(c2), 9.0f / 16.0f * Vector3.norm(a)/*norm(b)*/);
+                                c = Vector3.mult(Vector3.normalize(c2), (screen169 ? 9.0f / 16.0f : 3.0f / 4.0f) * Vector3.norm(a)/*norm(b)*/);
 
 
                             CameraSpacePoint BL = surfacePoints[0];
@@ -380,13 +382,25 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                                                             : Properties.Resources.SensorNotAvailableStatusText;
         }
 
-        private void AddNewSurface_MenuItem_Click(object sender, RoutedEventArgs e)
+        private void AddNewSurface()
         {
             SaveSurfaceMenuItem.IsEnabled = false;
             OnlyPlayersMenuItem.IsChecked = false;
             calibratingSurface = true;
             surfacePoints.Clear();
             canvas.Children.Clear();
+        }
+
+        private void AddNewSurface_169_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            screen169 = true;
+            AddNewSurface();
+        }
+
+        private void AddNewSurface_43_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            screen169 = false;
+            AddNewSurface();
         }
 
         private void _drawLine(int X1, int Y1, int X2, int Y2)
