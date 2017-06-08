@@ -42,6 +42,8 @@
         <ContextMenu>
             <MenuItem Header="Add New Surface 16:9" Click="AddNewSurface_169_MenuItem_Click">
             </MenuItem>
+            <MenuItem Header="Add New Surface 9:16 (Portrait)" Click="AddNewSurface_916_MenuItem_Click">
+            </MenuItem>
             <MenuItem Header="Add New Surface 4:3" Click="AddNewSurface_43_MenuItem_Click">
             </MenuItem>
             <MenuItem Name="OnlyPlayersMenuItem" Header="Only Players" IsCheckable="True" IsChecked="False">

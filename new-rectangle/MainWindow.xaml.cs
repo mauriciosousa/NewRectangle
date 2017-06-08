@@ -14,6 +14,13 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     using System.Windows.Shapes;
     using System.Collections.Generic;
 
+    public enum Screen
+    {
+        landscape_16_9,
+        portrait_9_16,
+        landscape_4_3
+    }
+
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
@@ -55,7 +62,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         private string _notificationText = "";
 
-        private bool screen169 = false;
+        private Screen screen = Screen.landscape_16_9;
 
         public MainWindow()
         {
@@ -296,10 +303,20 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             CameraSpacePoint c2 = Vector3.mult(c1, -1f);
                             CameraSpacePoint c;
 
+                            float m;
+                            if (screen == Screen.landscape_16_9) m = 9.0f / 16.0f;
+                            else if (screen == Screen.portrait_9_16) m = 16.0f / 9.0f;
+                            else m = 3.0f / 4.0f;
+
+                            //if (Vector3.distance(surfacePoints[2], Vector3.addPoint(surfacePoints[1], c1)) < Vector3.distance(surfacePoints[2], Vector3.addPoint(surfacePoints[1], c2)))
+                            //    c = Vector3.mult(Vector3.normalize(c1), (screen169 ? 9.0f / 16.0f : 3.0f / 4.0f) * Vector3.norm(a)/*norm(b)*/);
+                            //else
+                            //    c = Vector3.mult(Vector3.normalize(c2), (screen169 ? 9.0f / 16.0f : 3.0f / 4.0f) * Vector3.norm(a)/*norm(b)*/);
+
                             if (Vector3.distance(surfacePoints[2], Vector3.addPoint(surfacePoints[1], c1)) < Vector3.distance(surfacePoints[2], Vector3.addPoint(surfacePoints[1], c2)))
-                                c = Vector3.mult(Vector3.normalize(c1), (screen169? 9.0f / 16.0f : 3.0f / 4.0f) * Vector3.norm(a)/*norm(b)*/);
+                                c = Vector3.mult(Vector3.normalize(c1), m * Vector3.norm(a)/*norm(b)*/);
                             else
-                                c = Vector3.mult(Vector3.normalize(c2), (screen169 ? 9.0f / 16.0f : 3.0f / 4.0f) * Vector3.norm(a)/*norm(b)*/);
+                                c = Vector3.mult(Vector3.normalize(c2), m * Vector3.norm(a)/*norm(b)*/);
 
 
                             CameraSpacePoint BL = surfacePoints[0];
@@ -393,13 +410,19 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         private void AddNewSurface_169_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            screen169 = true;
+            screen = Screen.landscape_16_9;
             AddNewSurface();
         }
 
         private void AddNewSurface_43_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            screen169 = false;
+            screen = Screen.landscape_4_3;
+            AddNewSurface();
+        }
+
+        private void AddNewSurface_916_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            screen = Screen.portrait_9_16;
             AddNewSurface();
         }
 
